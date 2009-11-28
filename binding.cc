@@ -34,22 +34,23 @@ class Connection : public EventEmitter {
   bool Connect (const char* conninfo)
   {
     if (connection_) return false;
-    
+
     /* TODO Ensure that hostaddr is always specified in conninfo to avoid
      * name lookup. (Unless we're connecting to localhost.)
      */
     connection_ = PQconnectStart(conninfo);
+
     if (!connection_) return false;
 
-    if (PQsetnonblocking(connection_, 1) == -1) {
+    ConnStatusType status = PQstatus(connection_);
+
+    if (CONNECTION_BAD == status) {
       PQfinish(connection_);
       connection_ = NULL;
       return false;
     }
 
-    ConnStatusType status = PQstatus(connection_);
-
-    if (CONNECTION_BAD == status) {
+    if (PQsetnonblocking(connection_, 1) == -1) {
       PQfinish(connection_);
       connection_ = NULL;
       return false;

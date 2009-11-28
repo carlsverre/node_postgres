@@ -1,4 +1,5 @@
 var binding = require("./binding");
+var sys = require("sys");
 
 var Connection = binding.Connection;
 

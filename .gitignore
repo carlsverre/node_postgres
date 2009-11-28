@@ -1,2 +1,4 @@
 binding.o
 binding.node
+.lock-wscript
+build
